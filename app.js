@@ -1,78 +1,37 @@
+const debug = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const config = require('config');
+const home = require('./routes/home');
+const movies = require('./routes/movies');
+const { auth, logger } = require('./middleware/middleware');
 const express = require('express');
-const uuid = require('uuid/v4');
-const Joi = require('@hapi/joi');
-
 const app = express();
-app.use(express.json()); //app.use(express.urlencoded())
 
-const movies = [
-  { id: 1, name: 'Nirja' },
-  { id: 2, name: 'Dangal' },
-  { id: 3, name: 'Pink' },
-  { id: 4, name: 'Drishyam' }
-];
+app.use(express.json());
 
-validateMovie = movie => {
-  const schema = {
-    name: Joi.string()
-      .min(3)
-      .required()
-  };
-  return Joi.validate(movie, schema);
-};
+//Configuration
+debug(`Application Name: ${config.get('name')}`);
+debug(`Mail Server: ${config.get('mail.host')}`);
 
-movieExists = movie => movies.find(m => m.id === movie);
+//export DEBUG=app:startup
+dbDebugger('Connected to Database');
 
-app.get('/api/movies', (req, res) => {
-  // console.log(req.query.name); ?name="Shashank"&age=25
-  res.send(movies);
-});
+//middleware
+app.use(auth);
+app.use(logger);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.use(helmet());
+app.use('/api/movies', movies);
+app.use('/', home);
 
-app.get('/api/movies/:id', (req, res) => {
-  const movie = movieExists(+req.params.id);
-  if (!movie) return res.status(400).send('Movie was not found');
-  res.send(movie);
-});
-
-app.post('/api/movies', (req, res) => {
-  const result = validateMovie(req.body);
-  if (result.error)
-    return res.status(400).send(result.error.details[0].message);
-  const movie = {
-    id: uuid(),
-    name: req.body.name
-  };
-  movies.push(movie);
-  res.send(movie);
-});
-
-app.put('/api/movies/:id', (req, res) => {
-  const movie = movieExists(+req.params.id);
-  if (!movie) return res.status(400).send('Movie was not found');
-
-  const result = validateMovie(req.body);
-  if (result.error)
-    return res.status(400).send(result.error.details[0].message);
-
-  const movieIndex = movies.indexOf(movie);
-
-  const updatedMovie = {
-    ...movie,
-    name: req.body.name
-  };
-  movies[movieIndex] = updatedMovie;
-
-  res.send(updatedMovie);
-});
-
-app.delete('/api/movies/:id', (req, res) => {
-  const movie = movieExists(+req.params.id);
-  if (!movie) return res.status(400).send('Movie was not found');
-
-  const movieIndex = movies.indexOf(movie);
-  movies.splice(movieIndex, 1);
-  res.send(movie);
-});
+//process.env.NODE_ENV
+if (app.get('env') === 'development') {
+  app.use(morgan('tiny'));
+  debug('Morgan enabled...');
+}
 
 const port = process.env.PORT || 3000;
-app.listen(port, console.log(`Listening to port ${port}`));
+app.listen(port, debug(`Listening to port ${port}`));
