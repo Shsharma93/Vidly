@@ -1,21 +1,12 @@
 const router = require('express').Router();
-const Movies = require('../db');
-const Joi = require('@hapi/joi');
-
-validateMovie = movie => {
-  const schema = {
-    name: Joi.string()
-      .min(3)
-      .required()
-  };
-  return Joi.validate(movie, schema);
-};
+const Movies = require('../db/moviesdb');
+const validateMovie = require('../validation/movies');
 
 //Read
 
 router.get('/', async (req, res) => {
   const movies = await Movies.find()
-    .limit(5)
+    .limit(20)
     .sort({ name: 1 })
     .select({ name: 1 });
   res.send(movies);

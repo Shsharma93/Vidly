@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const config = require('config');
 const home = require('./routes/home');
 const movies = require('./routes/movies');
+const customers = require('./routes/customers');
 const { auth, logger } = require('./middleware/middleware');
 const express = require('express');
 const app = express();
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(helmet());
 app.use('/api/movies', movies);
+app.use('/api/customers', customers);
 app.use('/', home);
 
 //process.env.NODE_ENV
