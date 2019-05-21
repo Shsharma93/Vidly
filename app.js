@@ -8,6 +8,14 @@ const movies = require('./routes/movies');
 const { auth, logger } = require('./middleware/middleware');
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+
+require('dotenv').config();
+
+mongoose
+  .connect(process.env.DB_CONNECTION, { useNewUrlParser: true })
+  .then(() => dbDebugger('connected to mongoDB'))
+  .catch(err => dbDebugger('Could not connect to mongodb', err));
 
 app.use(express.json());
 

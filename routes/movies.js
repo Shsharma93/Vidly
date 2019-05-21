@@ -1,6 +1,5 @@
 const router = require('express').Router();
-const uuid = require('uuid/v4');
-const movies = require('../db');
+const Movies = require('../db');
 const Joi = require('@hapi/joi');
 
 validateMovie = movie => {
@@ -12,56 +11,63 @@ validateMovie = movie => {
   return Joi.validate(movie, schema);
 };
 
-movieExists = movie => movies.find(m => m.id === movie);
+//Read
 
-router.get('/', (req, res) => {
-  // console.log(req.query.name); ?name="Shashank"&age=25
+router.get('/', async (req, res) => {
+  const movies = await Movies.find()
+    .limit(5)
+    .sort({ name: 1 })
+    .select({ name: 1 });
   res.send(movies);
 });
 
-router.get('/:id', (req, res) => {
-  const movie = movieExists(+req.params.id);
+router.get('/:id', async (req, res) => {
+  const movie = await Movies.findById({ _id: req.params.id });
   if (!movie) return res.status(400).send('Movie was not found');
   res.send(movie);
 });
 
-router.post('/', (req, res) => {
+//Write
+
+router.post('/', async (req, res) => {
   const result = validateMovie(req.body);
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
-  const movie = {
-    id: uuid(),
+
+  let movie = new Movies({
     name: req.body.name
-  };
-  movies.push(movie);
+  });
+  movie = await movie.save();
   res.send(movie);
 });
 
-router.put('/:id', (req, res) => {
-  const movie = movieExists(+req.params.id);
-  if (!movie) return res.status(400).send('Movie was not found');
+//Update
 
+router.put('/:id', async (req, res) => {
   const result = validateMovie(req.body);
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
 
-  const movieIndex = movies.indexOf(movie);
-
-  const updatedMovie = {
-    ...movie,
-    name: req.body.name
-  };
-  movies[movieIndex] = updatedMovie;
-
-  res.send(updatedMovie);
-});
-
-router.delete('/:id', (req, res) => {
-  const movie = movieExists(+req.params.id);
+  const movie = await Movies.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        name: req.body.name
+      }
+    },
+    { new: true }
+  );
   if (!movie) return res.status(400).send('Movie was not found');
 
-  const movieIndex = movies.indexOf(movie);
-  movies.splice(movieIndex, 1);
+  res.send(movie);
+});
+
+//Delete
+
+router.delete('/:id', async (req, res) => {
+  const movie = await Movies.findByIdAndRemove({ _id: req.params.id });
+  if (!movie) return res.status(400).send('Movie was not found');
+
   res.send(movie);
 });
 
