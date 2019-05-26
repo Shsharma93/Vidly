@@ -1,11 +1,11 @@
 const Joi = require('@hapi/joi');
 
-validateMovie = movie => {
+validateGenre = genre => {
   const schema = {
     name: Joi.string()
       .min(3)
       .required()
   };
-  return Joi.validate(movie, schema);
+  return Joi.validate(genre, schema);
 };
-module.exports = validateMovie;
+module.exports = validateGenre;
