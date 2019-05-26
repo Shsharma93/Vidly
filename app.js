@@ -10,6 +10,7 @@ const { auth, logger } = require('./middleware/middleware');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const movies = require('./routes/movies');
 
 require('dotenv').config();
 
@@ -36,6 +37,7 @@ app.use(helmet());
 app.use('/api/genres', genres);
 app.use('/api/customers', customers);
 app.use('/', home);
+app.use('/api/movies', movies);
 
 //process.env.NODE_ENV
 if (app.get('env') === 'development') {

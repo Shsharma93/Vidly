@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Genres = require('../db/genredb');
+const { Genres } = require('../db/genredb');
 const validateGenre = require('../validation/genres');
 
 //Read

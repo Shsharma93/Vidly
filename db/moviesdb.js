@@ -1,0 +1,29 @@
+const mongoose = require('mongoose');
+const { genreSchema } = require('./genredb');
+const movieSchema = mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    minlength: 3,
+    trim: true
+  },
+  genre: {
+    type: genreSchema,
+    required: true
+  },
+  numberInStock: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  dailyRentalRate: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 12
+  }
+});
+
+const Genres = mongoose.model('Movies', movieSchema);
+
+module.exports = Genres;
