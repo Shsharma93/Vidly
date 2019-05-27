@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
 
-  const customer = new Customers(...req.body);
+  const customer = new Customers({ ...req.body });
 
   res.send(await customer.save());
 });

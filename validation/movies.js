@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi');
 
-validateMovie = movie => {
+validatePostMovie = movie => {
   const schema = {
     title: Joi.string()
       .min(3)
@@ -18,4 +18,20 @@ validateMovie = movie => {
   };
   return Joi.validate(movie, schema);
 };
-module.exports = validateMovie;
+
+validatePutMovie = movie => {
+  const schema = {
+    title: Joi.string().min(3),
+    genreId: Joi.string(),
+    numberInStock: Joi.number()
+      .integer()
+      .min(0),
+    dailyRentalRate: Joi.number()
+      .integer()
+      .min(1)
+      .max(20)
+  };
+  return Joi.validate(movie, schema);
+};
+
+module.exports = { validatePostMovie, validatePutMovie };

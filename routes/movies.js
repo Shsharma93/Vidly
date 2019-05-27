@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Movies = require('../db/moviesdb');
 const { Genres } = require('../db/genredb');
-const validateMovie = require('../validation/movies');
+const { validatePutMovie, validatePostMovie } = require('../validation/movies');
 
 router.get('/', async (req, res) => {
   const movies = await Movies.find();
@@ -15,14 +15,14 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const result = validateMovie(req.body);
+  const result = validatePostMovie(req.body);
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
 
   const genre = await Genres.findById(req.body.genreId);
   if (!genre) return res.status(400).send('Invalid genre');
 
-  let movieInfo = {};
+  const movieInfo = {};
 
   for (let key in req.body) {
     if (key !== 'genreId') {
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  const result = validateMovie(req.body);
+  const result = validatePutMovie(req.body);
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
 

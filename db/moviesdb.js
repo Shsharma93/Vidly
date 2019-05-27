@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { genreSchema } = require('./genredb');
+
 const movieSchema = mongoose.Schema({
   title: {
     type: String,
@@ -24,6 +25,6 @@ const movieSchema = mongoose.Schema({
   }
 });
 
-const Genres = mongoose.model('Movies', movieSchema);
+const Movies = mongoose.model('movies', movieSchema);
 
-module.exports = Genres;
+module.exports = Movies;
