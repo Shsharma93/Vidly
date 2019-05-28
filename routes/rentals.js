@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const validateRental = require('../validation/rentals');
+const validateRental = require('../validation/rental');
 const Rentals = require('../db/rentalsdb');
 const Movies = require('../db/moviesdb');
 const Customer = require('../db/customersdb');

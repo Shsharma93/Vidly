@@ -1,11 +1,12 @@
 const Joi = require('@hapi/joi');
+Joi.objectId = require('joi-objectid')(Joi);
 
 validatePostMovie = movie => {
   const schema = {
     title: Joi.string()
-      .min(3)
+      .min(1)
       .required(),
-    genreId: Joi.string().required(),
+    genreId: Joi.objectId().required(),
     numberInStock: Joi.number()
       .integer()
       .required()
@@ -22,7 +23,7 @@ validatePostMovie = movie => {
 validatePutMovie = movie => {
   const schema = {
     title: Joi.string().min(3),
-    genreId: Joi.string(),
+    genreId: Joi.objectId(),
     numberInStock: Joi.number()
       .integer()
       .min(0),

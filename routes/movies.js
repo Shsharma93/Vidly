@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Movies = require('../db/moviesdb');
 const { Genres } = require('../db/genredb');
-const { validatePutMovie, validatePostMovie } = require('../validation/movies');
+const { validatePutMovie, validatePostMovie } = require('../validation/movie');
 
 router.get('/', async (req, res) => {
   const movies = await Movies.find();
@@ -30,13 +30,14 @@ router.post('/', async (req, res) => {
     }
   }
 
-  let movie = new Movies({
+  const movie = new Movies({
     ...movieInfo,
     genre: {
       ...genre
     }
   });
-  movie = await movie.save();
+
+  await movie.save();
   res.send(movie);
 });
 

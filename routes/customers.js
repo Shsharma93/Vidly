@@ -5,16 +5,6 @@ const {
   validatePostCustomer
 } = require('../validation/customer');
 
-router.post('/', async (req, res) => {
-  const result = validatePostCustomer(req.body);
-  if (result.error)
-    return res.status(400).send(result.error.details[0].message);
-
-  const customer = new Customers({ ...req.body });
-
-  res.send(await customer.save());
-});
-
 router.get('/', async (req, res) => {
   const customer = await Customers.find();
   res.send(customer);
@@ -24,6 +14,16 @@ router.get('/:id', async (req, res) => {
   const customer = await Customers.findById({ _id: req.params.id });
   if (!customer) return res.status(400).send('Customer was not found');
   res.send(customer);
+});
+
+router.post('/', async (req, res) => {
+  const result = validatePostCustomer(req.body);
+  if (result.error)
+    return res.status(400).send(result.error.details[0].message);
+
+  const customer = new Customers({ ...req.body });
+
+  res.send(await customer.save());
 });
 
 router.put('/:id', async (req, res) => {

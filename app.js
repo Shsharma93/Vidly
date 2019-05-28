@@ -12,6 +12,8 @@ const app = express();
 const mongoose = require('mongoose');
 const movies = require('./routes/movies');
 const rentals = require('./routes/rentals');
+const register = require('./routes/users');
+const login = require('./routes/login');
 
 require('dotenv').config();
 
@@ -40,6 +42,8 @@ app.use('/api/customers', customers);
 app.use('/', home);
 app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
+app.use('/api/register', register);
+app.use('/api/login', login);
 
 //process.env.NODE_ENV
 if (app.get('env') === 'development') {
@@ -49,3 +53,15 @@ if (app.get('env') === 'development') {
 
 const port = process.env.PORT || 3000;
 app.listen(port, debug(`Listening to port ${port}`));
+
+//_id: "5cec0b278a5596143bd9ca59"
+
+// 12 bytes - Total
+// 4 bytes: timestamp
+// 3 bytes: machine identifier
+// 2 bytes: process identifier
+// 3 bytes: counter
+
+//const id = new mongoose.Types.ObjectId();
+//console.log(id.getTimestamp());
+//console.log(mongoose.Types.ObjectId.isValid('1234'));

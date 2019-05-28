@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Genres } = require('../db/genredb');
-const validateGenre = require('../validation/genres');
+const validateGenre = require('../validation/genre');
 
 //Read
 
@@ -25,10 +25,11 @@ router.post('/', async (req, res) => {
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
 
-  let genre = new Genres({
+  const genre = new Genres({
     name: req.body.name
   });
-  genre = await genre.save();
+
+  await genre.save();
   res.send(genre);
 });
 
