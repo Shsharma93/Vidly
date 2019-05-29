@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const validateRental = require('../validation/rental');
-const Rentals = require('../db/rentalsdb');
-const Movies = require('../db/moviesdb');
-const Customer = require('../db/customersdb');
+const Rentals = require('../model/Rentals');
+const Movies = require('../model/Movies');
+const Customer = require('../model/Customers');
 const mongoose = require('mongoose');
 const Fawn = require('fawn');
 

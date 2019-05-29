@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Customers = require('../db/customersdb');
+const Customers = require('../model/Customers');
 const {
   validatePutCustomer,
   validatePostCustomer

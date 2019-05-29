@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const Movies = require('../db/moviesdb');
-const { Genres } = require('../db/genredb');
+const Movies = require('../model/Movies');
+const { Genres } = require('../model/Genre');
 const { validatePutMovie, validatePostMovie } = require('../validation/movie');
 
 router.get('/', async (req, res) => {

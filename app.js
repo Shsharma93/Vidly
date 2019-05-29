@@ -6,7 +6,6 @@ const config = require('config');
 const home = require('./routes/home');
 const genres = require('./routes/genres');
 const customers = require('./routes/customers');
-const { auth, logger } = require('./middleware/middleware');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -16,6 +15,11 @@ const register = require('./routes/users');
 const login = require('./routes/login');
 
 require('dotenv').config();
+
+if (!process.env.TOKEN_SECRET) {
+  console.error('FATAL ERROR: TOKEN_SECRET is not deifned');
+  process.exit(1);
+}
 
 mongoose
   .connect(process.env.DB_CONNECTION, { useNewUrlParser: true })
@@ -32,8 +36,6 @@ debug(`Mail Server: ${config.get('mail.host')}`);
 dbDebugger('Connected to Database');
 
 //middleware
-app.use(auth);
-app.use(logger);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(helmet());

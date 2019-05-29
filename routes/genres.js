@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const { Genres } = require('../db/genredb');
+const { Genres } = require('../model/Genre');
 const validateGenre = require('../validation/genre');
+const auth = require('../middleware/auth');
 
 //Read
 
@@ -20,7 +21,7 @@ router.get('/:id', async (req, res) => {
 
 //Write
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const result = validateGenre(req.body);
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
