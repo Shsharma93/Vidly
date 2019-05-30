@@ -11,7 +11,8 @@ validateUser = user => {
     password: Joi.string()
       .min(8)
       .max(32)
-      .required()
+      .required(),
+    isAdmin: Joi.boolean()
   };
   return Joi.validate(user, schema);
 };

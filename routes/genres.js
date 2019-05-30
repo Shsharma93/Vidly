@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { Genres } = require('../model/Genre');
 const validateGenre = require('../validation/genre');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 //Read
 
@@ -57,7 +58,7 @@ router.put('/:id', async (req, res) => {
 
 //Delete
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
   const genre = await Genres.findByIdAndRemove({ _id: req.params.id });
   if (!genre) return res.status(400).send('Genre was not found');
 

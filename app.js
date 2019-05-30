@@ -11,7 +11,7 @@ const app = express();
 const mongoose = require('mongoose');
 const movies = require('./routes/movies');
 const rentals = require('./routes/rentals');
-const register = require('./routes/users');
+const users = require('./routes/users');
 const login = require('./routes/login');
 
 require('dotenv').config();
@@ -44,7 +44,7 @@ app.use('/api/customers', customers);
 app.use('/', home);
 app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
-app.use('/api/register', register);
+app.use('/api/users', users);
 app.use('/api/login', login);
 
 //process.env.NODE_ENV
