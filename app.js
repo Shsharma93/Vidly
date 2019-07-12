@@ -13,6 +13,7 @@ const movies = require('./routes/movies');
 const rentals = require('./routes/rentals');
 const users = require('./routes/users');
 const login = require('./routes/login');
+const error = require('./middleware/error');
 
 require('dotenv').config();
 
@@ -20,6 +21,8 @@ if (!process.env.TOKEN_SECRET) {
   console.error('FATAL ERROR: TOKEN_SECRET is not deifned');
   process.exit(1);
 }
+
+mongoose.set('useCreateIndex', true);
 
 mongoose
   .connect(process.env.DB_CONNECTION, { useNewUrlParser: true })
@@ -46,6 +49,7 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/login', login);
+app.use(error);
 
 //process.env.NODE_ENV
 if (app.get('env') === 'development') {

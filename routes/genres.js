@@ -6,18 +6,25 @@ const admin = require('../middleware/admin');
 
 //Read
 
-router.get('/', async (req, res) => {
-  const genres = await Genres.find()
-    .limit(20)
-    .sort({ name: 1 })
-    .select({ name: 1 });
-  res.send(genres);
+router.get('/', async (req, res, next) => {
+  try {
+    const genres = await Genres.find()
+      .limit(20)
+      .sort({ name: 1 })
+      .select({ name: 1 });
+    res.send(genres);
+  } catch (ex) {
+    next(ex);
+  }
 });
 
-router.get('/:id', async (req, res) => {
-  const genre = await Genres.findById({ _id: req.params.id });
-  if (!genre) return res.status(400).send('Genre was not found');
-  res.send(genre);
+router.get('/:id', async (req, res, next) => {
+  try {
+    const genre = await Genres.findById({ _id: req.params.id });
+    res.send(genre);
+  } catch (ex) {
+    next(ex);
+  }
 });
 
 //Write
@@ -51,7 +58,8 @@ router.put('/:id', async (req, res) => {
     },
     { new: true }
   );
-  if (!genre) return res.status(400).send('Genre was not found');
+
+  if (!genre) return res.status(404).send('Genre was not found');
 
   res.send(genre);
 });
