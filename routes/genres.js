@@ -22,8 +22,7 @@ router.get(
   '/:id',
   asyncMiddleware(async (req, res) => {
     const genre = await Genres.findById({ _id: req.params.id });
-    console.log(genre);
-    if (!genre) throw new Error('ID genre could not be found');
+    if (!genre) throw new Error('Genre with Id  doesnt exists.');
     res.send(genre);
   })
 );

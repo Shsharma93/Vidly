@@ -9,7 +9,7 @@ require('dotenv').config();
 require('./startup/db')();
 
 if (!process.env.TOKEN_SECRET) {
-  console.error('FATAL ERROR: TOKEN_SECRET is not deifned');
+  console.error('FATAL ERROR: TOKEN_SECRET is not defined');
   process.exit(1);
 }
 
